@@ -40,7 +40,7 @@ const gameHeartBtn = document.getElementById('gameHeartBtn');
 const gameMessage = document.getElementById('gameMessage');
 let gameClicked = false;
 
-gameHeartBtn.addEventListener('click', function(e) {
+function handleGameHeart(e) {
     e.preventDefault();
     if (!gameClicked) {
         gameClicked = true;
@@ -54,13 +54,17 @@ gameHeartBtn.addEventListener('click', function(e) {
             }, i * 50);
         }
     }
-});
+}
+
+// Add both click and touch events for mobile compatibility
+gameHeartBtn.addEventListener('click', handleGameHeart);
+gameHeartBtn.addEventListener('touchend', handleGameHeart);
 
 // Interactive heart button - Special Message
 const heartButton = document.getElementById('heartButton');
 const hiddenMessage = document.getElementById('hiddenMessage');
 
-heartButton.addEventListener('click', function(e) {
+function handleSpecialMessage(e) {
     e.preventDefault();
     hiddenMessage.classList.toggle('show');
     
@@ -72,7 +76,11 @@ heartButton.addEventListener('click', function(e) {
             }, i * 50);
         }
     }
-});
+}
+
+// Add both click and touch events for mobile compatibility
+heartButton.addEventListener('click', handleSpecialMessage);
+heartButton.addEventListener('touchend', handleSpecialMessage);
 
 function createBurstHeart() {
     const heart = document.createElement('div');
@@ -143,32 +151,36 @@ document.querySelectorAll('.reason-card').forEach((card, index) => {
 // Initialize floating hearts
 createFloatingHearts();
 
-// Add parallax effect to hero section
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const hero = document.querySelector('.hero');
-    if (hero) {
-        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-    }
-});
+// Add parallax effect to hero section (disable on mobile for performance)
+if (window.innerWidth > 768) {
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+        }
+    });
+}
 
-// Add particle effect on mouse move
-document.addEventListener('mousemove', (e) => {
-    if (Math.random() > 0.95) {
-        const particle = document.createElement('div');
-        particle.textContent = Math.random() > 0.7 ? '🌷' : '✨';
-        particle.style.position = 'fixed';
-        particle.style.left = e.clientX + 'px';
-        particle.style.top = e.clientY + 'px';
-        particle.style.fontSize = '20px';
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '9999';
-        particle.style.animation = 'fadeOut 2s ease-out forwards';
-        
-document.body.appendChild(particle);
-        
-        setTimeout(() => {
-            particle.remove();
-        }, 2000);
-    }
-});
+// Add particle effect on mouse move (desktop only)
+if (window.innerWidth > 768) {
+    document.addEventListener('mousemove', (e) => {
+        if (Math.random() > 0.95) {
+            const particle = document.createElement('div');
+            particle.textContent = Math.random() > 0.7 ? '🌷' : '✨';
+            particle.style.position = 'fixed';
+            particle.style.left = e.clientX + 'px';
+            particle.style.top = e.clientY + 'px';
+            particle.style.fontSize = '20px';
+            particle.style.pointerEvents = 'none';
+            particle.style.zIndex = '9999';
+            particle.style.animation = 'fadeOut 2s ease-out forwards';
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 2000);
+        }
+    });
+}
