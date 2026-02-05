@@ -1,12 +1,35 @@
-// Create floating hearts
+// Countdown Timer - Live updating
+function updateCountdown() {
+    const startDate = new Date('2025-08-09T00:00:00');
+    const now = new Date();
+    
+    const diff = now - startDate;
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    document.getElementById('days').textContent = days;
+    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+    document.getElementById('daysSinceMeeting').textContent = days;
+}
+
+// Update countdown every second
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// Create floating hearts and tulips
 function createFloatingHearts() {
     const heartsContainer = document.getElementById('heartsContainer');
-    const heartSymbols = ['❤️', '💕', '💖', '💗', '💓', '💝'];
+    const symbols = ['❤️', '💕', '💖', '💗', '💓', '💝', '🌷'];
     
     setInterval(() => {
         const heart = document.createElement('div');
         heart.classList.add('floating-heart');
-        heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+        heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
         heart.style.left = Math.random() * 100 + '%';
         heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
         heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
@@ -18,6 +41,26 @@ function createFloatingHearts() {
         }, 15000);
     }, 800);
 }
+
+// Game Section - "Play with My Heart"
+const gameHeartBtn = document.getElementById('gameHeartBtn');
+const gameMessage = document.getElementById('gameMessage');
+let gameClicked = false;
+
+gameHeartBtn.addEventListener('click', () => {
+    if (!gameClicked) {
+        gameClicked = true;
+        gameHeartBtn.classList.add('clicked');
+        gameMessage.classList.add('show');
+        
+        // Create heart burst
+        for (let i = 0; i < 30; i++) {
+            setTimeout(() => {
+                createBurstHeart();
+            }, i * 50);
+        }
+    }
+});
 
 // Interactive heart button
 const heartButton = document.getElementById('heartButton');
@@ -43,7 +86,7 @@ heartButton.addEventListener('click', () => {
 
 function createBurstHeart() {
     const heart = document.createElement('div');
-    heart.textContent = '❤️';
+    heart.textContent = Math.random() > 0.5 ? '❤️' : '🌷';
     heart.style.position = 'fixed';
     heart.style.fontSize = '30px';
     heart.style.left = '50%';
@@ -81,7 +124,7 @@ function createBurstHeart() {
 
 // Smooth scrolling for scroll indicator
 document.querySelector('.scroll-indicator').addEventListener('click', () => {
-    document.querySelector('.love-letter').scrollIntoView({ behavior: 'smooth' });
+    document.querySelector('.countdown-section').scrollIntoView({ behavior: 'smooth' });
 });
 
 // Intersection Observer for fade-in animations
@@ -116,5 +159,26 @@ window.addEventListener('scroll', () => {
     const hero = document.querySelector('.hero');
     if (hero) {
         hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+    }
+});
+
+// Add particle effect on mouse move
+document.addEventListener('mousemove', (e) => {
+    if (Math.random() > 0.95) {
+        const particle = document.createElement('div');
+        particle.textContent = Math.random() > 0.7 ? '🌷' : '✨';
+        particle.style.position = 'fixed';
+        particle.style.left = e.clientX + 'px';
+        particle.style.top = e.clientY + 'px';
+        particle.style.fontSize = '20px';
+        particle.style.pointerEvents = 'none';
+        particle.style.zIndex = '9999';
+        particle.style.animation = 'fadeOut 2s ease-out forwards';
+        
+        document.body.appendChild(particle);
+        
+        setTimeout(() => {
+            particle.remove();
+        }, 2000);
     }
 });
