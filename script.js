@@ -6,15 +6,8 @@ function updateCountdown() {
     const diff = now - startDate;
     
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
     
     document.getElementById('days').textContent = days;
-    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-    document.getElementById('daysSinceMeeting').textContent = days;
 }
 
 // Update countdown every second
@@ -47,7 +40,8 @@ const gameHeartBtn = document.getElementById('gameHeartBtn');
 const gameMessage = document.getElementById('gameMessage');
 let gameClicked = false;
 
-gameHeartBtn.addEventListener('click', () => {
+gameHeartBtn.addEventListener('click', function(e) {
+    e.preventDefault();
     if (!gameClicked) {
         gameClicked = true;
         gameHeartBtn.classList.add('clicked');
@@ -62,25 +56,21 @@ gameHeartBtn.addEventListener('click', () => {
     }
 });
 
-// Interactive heart button
+// Interactive heart button - Special Message
 const heartButton = document.getElementById('heartButton');
 const hiddenMessage = document.getElementById('hiddenMessage');
-const messageBox = document.getElementById('messageBox');
 
-heartButton.addEventListener('click', () => {
+heartButton.addEventListener('click', function(e) {
+    e.preventDefault();
     hiddenMessage.classList.toggle('show');
     
     if (hiddenMessage.classList.contains('show')) {
-        messageBox.querySelector('p:first-child').style.display = 'none';
-        
         // Create burst of hearts
         for (let i = 0; i < 20; i++) {
             setTimeout(() => {
                 createBurstHeart();
             }, i * 50);
         }
-    } else {
-        messageBox.querySelector('p:first-child').style.display = 'block';
     }
 });
 
@@ -175,7 +165,7 @@ document.addEventListener('mousemove', (e) => {
         particle.style.zIndex = '9999';
         particle.style.animation = 'fadeOut 2s ease-out forwards';
         
-        document.body.appendChild(particle);
+document.body.appendChild(particle);
         
         setTimeout(() => {
             particle.remove();
